@@ -5,55 +5,78 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>요즘 당신의 과자 성격 유형은?</title>
 
-  <!-- 공유 최적화 (OG) -->
+  <!-- OG (공유 최적화) -->
   <meta property="og:title" content="요즘 당신의 과자 성격 유형은?" />
   <meta property="og:description" content="1분이면 결과 나오는 과자 성격 테스트 🍪" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mbtim.netlify.app" />
   <meta property="og:image" content="https://mbtim.netlify.app/images/thumbnail.png" />
 
-  <meta name="twitter:card" content="summary_large_image" />
-
   <style>
     body {
-      font-family: sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
       background: #fffaf5;
+      margin: 0;
+      padding: 20px;
       text-align: center;
-      padding: 20px;
     }
+
     .card {
-      background: white;
-      padding: 20px;
-      border-radius: 20px;
-      max-width: 500px;
+      max-width: 520px;
       margin: auto;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      background: white;
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
+
+    h1 { font-size: 28px; }
+
     button {
-      padding: 12px;
-      margin: 10px;
-      border-radius: 10px;
+      width: 100%;
+      padding: 14px;
+      margin: 8px 0;
+      border-radius: 12px;
       border: none;
+      font-size: 15px;
       cursor: pointer;
     }
+
     .primary {
       background: #ff8f5a;
       color: white;
     }
+
+    .answer {
+      background: #fff;
+      border: 1px solid #eee;
+    }
+
     img {
-      width: 120px;
+      width: 130px;
+      margin-bottom: 10px;
+    }
+
+    a {
+      display: block;
+      margin: 6px 0;
+      padding: 10px;
+      background: #fff3ec;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #333;
     }
   </style>
 </head>
 
 <body>
 
-<div class="card" id="app">
+<div class="card">
 
   <!-- 랜딩 -->
   <div id="landing">
     <h1>🍪 과자 성격 테스트</h1>
-    <p>1분이면 결과 확인 가능</p>
+    <p>요즘 당신의 상태를 가장 잘 설명하는 간식은?</p>
     <button class="primary" onclick="start()">테스트 시작</button>
   </div>
 
@@ -65,7 +88,7 @@
 
   <!-- 결과 -->
   <div id="result" style="display:none;">
-    <img id="character"/>
+    <img id="img"/>
     <h2 id="title"></h2>
     <p id="desc"></p>
 
@@ -82,12 +105,12 @@
 <script>
 
 const questions = [
-  ["주말?", ["혼자",0],["사람",1]],
-  ["요즘?", ["안정",0],["자극",1]],
-  ["간식?", ["혼자",0],["같이",1]],
-  ["취향?", ["익숙",0],["새로움",1]],
-  ["스트레스?", ["혼자",0],["밖에서",1]],
-  ["소비?", ["소확행",0],["확질러",1]],
+  {q:"주말에 더 끌리는 건?", a:[["집에서 혼자 쉬기",0],["밖에서 약속",1]]},
+  {q:"요즘 나는?", a:[["안정 필요",0],["자극 필요",1]]},
+  {q:"간식 먹는 순간?", a:[["혼자",0],["같이",1]]},
+  {q:"취향은?", a:[["익숙한 것",0],["새로운 것",1]]},
+  {q:"스트레스 해소?", a:[["혼자",0],["사람 만나기",1]]},
+  {q:"소비 스타일?", a:[["소확행",0],["한방",1]]},
 ];
 
 let step=0, score=0;
@@ -103,14 +126,15 @@ function start(){
 function next(){
   if(step>=questions.length) return showResult();
 
-  question.innerText = questions[step][0];
+  question.innerText = questions[step].q;
   answers.innerHTML="";
 
-  questions[step].slice(1).forEach(a=>{
-    let btn=document.createElement("button");
-    btn.innerText=a[0];
-    btn.onclick=()=>{score+=a[1];step++;next();}
-    answers.appendChild(btn);
+  questions[step].a.forEach(v=>{
+    let b=document.createElement("button");
+    b.className="answer";
+    b.innerText=v[0];
+    b.onclick=()=>{score+=v[1];step++;next();}
+    answers.appendChild(b);
   });
 }
 
@@ -123,9 +147,9 @@ function showResult(){
 
   if(score<=1){
     data={
-      title:"빼빼로형",
+      title:"🍫 빼빼로형 인간",
       img:"images/pepero.png",
-      desc:"혼자 충전하는 타입",
+      desc:"혼자 있는 시간에서 충전되는 타입",
       products:[
         ["빼빼로 크런키","https://link.coupang.com/a/elEFfW"],
         ["빼빼로 아몬드","https://link.coupang.com/a/elEFBH"]
@@ -133,25 +157,52 @@ function showResult(){
     }
   } else if(score==2){
     data={
-      title:"쿠키형",
+      title:"🍪 쿠키형 인간",
       img:"images/cookie.png",
-      desc:"편안한 루틴형",
+      desc:"편안한 루틴을 좋아하는 타입",
       products:[
         ["버터쿠키","https://link.coupang.com/a/elEGd7"]
       ]
     }
+  } else if(score==3){
+    data={
+      title:"🍭 젤리형 인간",
+      img:"images/jelly.png",
+      desc:"새로운 자극을 찾는 타입",
+      products:[
+        ["하리보 젤리","https://link.coupang.com/a/elEH3L"]
+      ]
+    }
+  } else if(score==4){
+    data={
+      title:"🍦 아이스크림형 인간",
+      img:"images/icecream.png",
+      desc:"힐링이 필요한 상태",
+      products:[
+        ["아이스크림","https://link.coupang.com/a/elEIXi"]
+      ]
+    }
+  } else if(score==5){
+    data={
+      title:"🍿 팝콘형 인간",
+      img:"images/popcorn.png",
+      desc:"사람들과 함께 즐기는 타입",
+      products:[
+        ["팝콘","https://link.coupang.com/a/elEJK7"]
+      ]
+    }
   } else {
     data={
-      title:"젤리형",
-      img:"images/jelly.png",
-      desc:"자극 추구형",
+      title:"🍫 초콜릿형 인간",
+      img:"images/chocolate.png",
+      desc:"나를 위한 소비를 하는 타입",
       products:[
-        ["하리보","https://link.coupang.com/a/elEH3L"]
+        ["초콜릿","https://link.coupang.com/a/elEKwb"]
       ]
     }
   }
 
-  character.src=data.img;
+  img.src=data.img;
   title.innerText=data.title;
   desc.innerText=data.desc;
 
@@ -162,13 +213,11 @@ function showResult(){
     a.target="_blank";
     a.innerText=p[0];
     products.appendChild(a);
-    products.appendChild(document.createElement("br"));
   });
-
 }
 
 function copyText(){
-  navigator.clipboard.writeText("나 이거 해봤는데 웃김ㅋㅋ");
+  navigator.clipboard.writeText("나 이거 해봤는데 은근 잘 맞음ㅋㅋ 너도 해봐");
 }
 
 function copyLink(){
@@ -177,10 +226,7 @@ function copyLink(){
 
 function share(){
   if(navigator.share){
-    navigator.share({
-      title:"과자 테스트",
-      url:location.href
-    })
+    navigator.share({title:"과자 테스트",url:location.href});
   }
 }
 
