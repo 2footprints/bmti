@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPTI | 요즘 당신의 과자 성격 유형은?</title>
+  <meta property="og:title" content="SPTI | 요즘 당신의 과자 성격 유형은?" />
+  <meta property="og:description" content="지금 당신이 가장 닮은 간식을 찾아드립니다." />
+  <meta property="og:type" content="website" />
+  <style>
+    :root {
+      --bg: #fffaf5;
+      --card: #ffffff;
+      --text: #2f241f;
+      --muted: #7d6b63;
+      --line: #f0dfd5;
+      --accent: #ff8f5a;
+      --accent-soft: #fff0e8;
+      --shadow: 0 16px 40px rgba(73, 42, 21, 0.08);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif; background: linear-gradient(180deg, #fffaf5 0%, #fff4ec 100%); color: var(--text); }
+    body { min-height: 100vh; }
+
+    .app {
+      width: min(760px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(240, 223, 213, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #b85d33;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3, p { margin: 0; }
+
+    .hero-title {
+      font-size: clamp(32px, 5vw, 48px);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .hero-points {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .hero-point {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 14px 24px rgba(255, 143, 90, 0.3);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-block { width: 100%; }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .progress-label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .progress {
+      height: 10px;
+      background: #f7e8de;
+      border-radius: 999px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff9b6b 0%, #ff7f50 100%);
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .question-title {
+      font-size: clamp(26px, 4vw, 34px);
+      line-height: 1.28;
+      letter-spacing: -0.03em;
+      margin: 18px 0 22px;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
+    }
+
+    .answer {
+      width: 100%;
+      text-align: left;
+      padding: 18px 18px;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 18px;
+      font-size: 16px;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+    }
+
+    .answer:hover {
+      border-color: #ffb392;
+      background: #fff8f3;
+      transform: translateY(-1px);
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .emoji {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: var(--accent-soft);
+      font-size: 34px;
+    }
+
+    .result-title {
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .result-sub {
+      font-size: 17px;
+      color: #b85d33;
+      font-weight: 700;
+    }
+
+    .result-copy {
+      font-size: 17px;
+      line-height: 1.8;
+      color: #4f4038;
+      margin: 22px 0;
+    }
+
+    .mini-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff8f3;
+      color: #8d5a43;
+      border: 1px solid #f3d7c9;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .products {
+      display: grid;
+      gap: 14px;
+      margin: 18px 0 28px;
+    }
+
+    .product {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .product-name {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .product-desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .product a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: #b85d33;
+      font-weight: 800;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .result-character {
+      width: 120px;
+      max-width: 100%;
+      display: block;
+      margin: 0 auto 18px;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.08));
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #9c8578;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      .app { width: min(100% - 24px, 760px); padding-top: 16px; }
+      .card { padding: 22px 18px; border-radius: 22px; }
+      .actions { flex-direction: column; }
+      .actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section id="landing" class="section active">
+      <div class="card">
+        <div class="badge">🍪 SPTI · Snack Personality Type Indicator</div>
+        <h1 class="hero-title">요즘 당신의<br>과자 성격 유형은?</h1>
+        <p class="hero-sub">
+          지금 당신이 가장 닮은 간식을 찾아드립니다.<br>
+          가볍게 답하다 보면, 오늘의 기분과 잘 맞는 추천까지 볼 수 있어요.
+        </p>
+        <div class="hero-points">
+          <span class="hero-point">약 1분 소요</span>
+          <span class="hero-point">총 6문항</span>
+          <span class="hero-point">결과 공유 가능</span>
+        </div>
+        <button class="btn btn-primary" id="startBtn">테스트 시작하기</button>
+      </div>
+    </section>
+
+    <section id="quiz" class="section">
+      <div class="card">
+        <div class="progress-wrap">
+          <div class="progress-label" id="progressLabel">1 / 6</div>
+          <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+        </div>
+        <h2 class="question-title" id="questionTitle"></h2>
+        <div class="answers" id="answersWrap"></div>
+      </div>
+    </section>
+
+    <section id="result" class="section">
+      <div class="card">
+        <img class="result-character" id="resultCharacter" alt="과자 캐릭터" />
+        <div class="result-header">
+          <div class="emoji" id="resultEmoji">🍫</div>
+          <div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <p class="result-sub" id="resultSummary"></p>
+          </div>
+        </div>
+
+        <p class="result-copy" id="resultDescription"></p>
+
+        <div>
+          <div class="mini-title">이런 키워드와 잘 맞아요</div>
+          <div class="chips" id="resultChips"></div>
+        </div>
+
+        <div>
+          <div class="mini-title">추천 아이템</div>
+          <div class="products" id="productsWrap"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="retryBtn">다시 테스트하기</button>
+          <button class="btn btn-secondary" id="copyBtn">결과 문구 복사</button>
+          <button class="btn btn-secondary" id="copyLinkBtn">링크 복사</button>
+          <button class="btn btn-secondary" id="shareBtn">공유하기</button>
+        </div>
+
+        <p class="footnote">
+          현재 쿠팡 링크는 예시 자리입니다. 실제 운영 시 제휴 링크로 교체하면 됩니다.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: '주말에 더 끌리는 시간은?',
+        answers: [
+          { text: '집에서 혼자 쉬는 시간', score: 0 },
+          { text: '사람들과 약속 있는 시간', score: 1 }
+        ]
+      },
+      {
+        text: '요즘 나를 가장 잘 설명하는 건?',
+        answers: [
+          { text: '안정이 필요하다', score: 0 },
+          { text: '새로운 자극이 필요하다', score: 1 }
+        ]
+      },
+      {
+        text: '간식을 먹는 순간은 언제인가요?',
+        answers: [
+          { text: '혼자 있을 때', score: 0 },
+          { text: '누군가와 함께 있을 때', score: 1 }
+        ]
+      },
+      {
+        text: '요즘 더 끌리는 건?',
+        answers: [
+          { text: '익숙하고 편안한 것', score: 0 },
+          { text: '새롭고 재미있는 것', score: 1 }
+        ]
+      },
+      {
+        text: '스트레스를 풀 때 나는?',
+        answers: [
+          { text: '조용히 혼자 푼다', score: 0 },
+          { text: '밖에서 풀거나 사람과 나눈다', score: 1 }
+        ]
+      },
+      {
+        text: '소비 스타일은?',
+        answers: [
+          { text: '작지만 확실한 만족', score: 0 },
+          { text: '한 번에 확실하게', score: 1 }
+        ]
+      }
+    ];
+
+    const resultMap = [
+      
+      {
+        min: 0, max: 1,
+        type: 'pepero',
+        emoji: '🍫',
+        image: './images/pepero.png',
+        title: '당신은 빼빼로형 인간입니다',
+        summary: '혼자 있는 시간에서 충전되는, 조용한 만족형',
+        description: '요즘의 당신은 사람들과 잘 어울리면서도 결국은 혼자만의 시간에서 에너지를 회복하는 타입입니다. 크게 흔들리지는 않지만, 은근히 피로가 쌓여 있을 수 있어요. 그래서 작지만 확실한 만족을 자주 찾게 됩니다.',
+        chips: ['혼자 충전', '작은 행복', '부담 없는 만족'],
+        products: [
+          { name: '빼빼로 크런키 10개입', desc: '익숙해서 더 편안한 선택. 가볍게 집어먹기 좋은 간식.', url: 'https://link.coupang.com/a/elEFfW' },
+          { name: '빼빼로 아몬드 10개입', desc: '조금 더 고소한 만족을 주는 클래식 조합.', url: 'https://link.coupang.com/a/elEFBH' },
+          { name: '우마이봉 초코 파티팩', desc: '가볍게 하나씩 꺼내 먹기 좋은 재미있는 간식.', url: 'https://link.coupang.com/a/elEFSa' }
+        ]
+      },
+      {
+        min: 2, max: 2,
+        type: 'cookie',
+        emoji: '🍪',
+        image: './images/cookie.png',
+        title: '당신은 쿠키형 인간입니다',
+        summary: '익숙한 것에서 행복을 찾는, 따뜻한 일상형',
+        description: '당신은 편안하고 익숙한 리듬 안에서 안정감을 느끼는 타입입니다. 일상의 작은 루틴 속에서 만족을 찾는 성향이에요.',
+        chips: ['안정감', '따뜻한 루틴', '편안한 만족'],
+        products: [
+          { name: '데니쉬 버터쿠키 800g', desc: '티타임과 잘 어울리는 클래식한 선택.', url: 'https://link.coupang.com/a/elEGd7' },
+          { name: '화이트캐슬 버터쿠키', desc: '부드럽고 고소한 맛으로 꾸준히 사랑받는 간식.', url: 'https://link.coupang.com/a/elEGyN' },
+          { name: '르뱅쿠키 세트', desc: '조금 더 특별한 날을 위한 디저트 선택.', url: 'https://link.coupang.com/a/elEGLP' }
+        ]
+      },
+      {
+        min: 3, max: 3,
+        type: 'jelly',
+        emoji: '🍭',
+        image: './images/jelly.png',
+        title: '당신은 젤리형 인간입니다',
+        summary: '새롭고 재미있는 자극을 찾는, 즉흥 만족형',
+        description: '요즘 당신은 가볍게 기분을 바꿔줄 자극을 찾고 있습니다. 새로운 간식과 재미있는 소비에 끌리는 시기예요.',
+        chips: ['자극 추구', '즉흥성', '신상 좋아함'],
+        products: [
+          { name: '하리보 스타믹스 젤리', desc: '다양한 맛을 한 번에 즐길 수 있는 인기 젤리.', url: 'https://link.coupang.com/a/elEH3L' },
+          { name: '마이구미 미니 과즙젤리', desc: '가볍게 즐기기 좋은 달콤한 간식.', url: 'https://link.coupang.com/a/elEIkQ' },
+          { name: '츄파춥스 사워 젤리', desc: '톡 쏘는 자극으로 기분 전환에 좋은 선택.', url: 'https://link.coupang.com/a/elEIEl' }
+        ]
+      },
+      {
+        min: 4, max: 4,
+        type: 'icecream',
+        emoji: '🍦',
+        image: './images/icecream.png',
+        title: '당신은 아이스크림형 인간입니다',
+        summary: '위로와 휴식이 필요한, 부드러운 힐링형',
+        description: '지금의 당신은 감정을 부드럽게 풀어주는 시간이 필요합니다. 편안한 디저트와 함께 쉬어가는 순간이 잘 어울려요.',
+        chips: ['힐링 필요', '감정형', '부드러운 만족'],
+        products: [
+          { name: '라라스윗 초콜릿 아이스크림', desc: '부드럽고 달콤한 힐링 디저트.', url: 'https://link.coupang.com/a/elEIXi' },
+          { name: '벤앤제리스 아이스크림', desc: '조금 더 특별한 기분 전환용 아이템.', url: 'https://link.coupang.com/a/elEJhe' },
+          { name: '엑설런트 아이스크림', desc: '익숙하면서도 만족감 높은 클래식.', url: 'https://link.coupang.com/a/elEJwI' }
+        ]
+      },
+      {
+        min: 5, max: 5,
+        type: 'popcorn',
+        emoji: '🍿',
+        image: './images/popcorn.png',
+        title: '당신은 팝콘형 인간입니다',
+        summary: '함께 나누는 순간이 즐거운, 공유 에너지형',
+        description: '사람들과 함께할 때 더 즐거운 타입입니다. 나눌 수 있는 간식과 함께하는 시간이 중요해요.',
+        chips: ['공유형', '외향적', '함께 즐김'],
+        products: [
+          { name: '버터솔트 팝콘', desc: '가볍게 나눠 먹기 좋은 간식.', url: 'https://link.coupang.com/a/elEJK7' },
+          { name: '곰곰 스윗 팝콘', desc: '달콤한 맛으로 모두가 좋아하는 선택.', url: 'https://link.coupang.com/a/elEJ2L' },
+          { name: '시네마 팝콘 믹스', desc: '영화 볼 때 분위기 살리는 필수 간식.', url: 'https://link.coupang.com/a/elEKeN' }
+        ]
+      },
+      {
+        min: 6, max: 6,
+        type: 'premium-chocolate',
+        emoji: '💝',
+        image: './images/chocolate.png',
+        title: '당신은 초콜릿형 인간입니다',
+        summary: '나를 위한 소비를 즐기는, 감각 만족형',
+        description: '당신은 단순한 소비보다 만족감이 오래 남는 선택을 중요하게 생각합니다.',
+        chips: ['자기보상', '가치소비', '감각 중시'],
+        products: [
+          { name: '트러플 초콜릿', desc: '부드럽고 깊은 맛의 프리미엄 디저트.', url: 'https://link.coupang.com/a/elEKwb' },
+          { name: '벨기에 밀크 초콜릿', desc: '고급스러운 맛으로 기분을 올려주는 선택.', url: 'https://link.coupang.com/a/elEKBz' },
+          { name: '베어 초콜릿', desc: '귀엽고 달콤한 감성 디저트.', url: 'https://link.coupang.com/a/elEKH6' }
+        ]
+      }
+    ];
+
+    const landing = document.getElementById('landing');
+    const quiz = document.getElementById('quiz');
+    const result = document.getElementById('result');
+    const questionTitle = document.getElementById('questionTitle');
+    const answersWrap = document.getElementById('answersWrap');
+    const progressLabel = document.getElementById('progressLabel');
+    const progressBar = document.getElementById('progressBar');
+
+    const resultEmoji = document.getElementById('resultEmoji');
+    const resultCharacter = document.getElementById('resultCharacter');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultSummary = document.getElementById('resultSummary');
+    const resultDescription = document.getElementById('resultDescription');
+    const resultChips = document.getElementById('resultChips');
+    const productsWrap = document.getElementById('productsWrap');
+
+    const startBtn = document.getElementById('startBtn');
+    const retryBtn = document.getElementById('retryBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const copyLinkBtn = document.getElementById('copyLinkBtn');
+
+    let currentIndex = 0;
+    let totalScore = 0;
+
+    function showSection(target) {
+      [landing, quiz, result].forEach(el => el.classList.remove('active'));
+      target.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function startTest() {
+      currentIndex = 0;
+      totalScore = 0;
+      renderQuestion();
+      showSection(quiz);
+    }
+
+    function renderQuestion() {
+      const current = questions[currentIndex];
+      questionTitle.textContent = current.text;
+      progressLabel.textContent = `${currentIndex + 1} / ${questions.length}`;
+      progressBar.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+      answersWrap.innerHTML = '';
+
+      current.answers.forEach(answer => {
+        const btn = document.createElement('button');
+        btn.className = 'answer';
+        btn.textContent = answer.text;
+        btn.addEventListener('click', () => chooseAnswer(answer.score));
+        answersWrap.appendChild(btn);
+      });
+    }
+
+    function chooseAnswer(score) {
+      totalScore += score;
+      currentIndex += 1;
+
+      if (currentIndex < questions.length) {
+        renderQuestion();
+      } else {
+        renderResult();
+      }
+    }
+
+    function getResultByScore(score) {
+      return resultMap.find(item => score >= item.min && score <= item.max) || resultMap[0];
+    }
+
+    function getResultByType(type) {
+      return resultMap.find(item => item.type === type) || null;
+    }
+
+    async function copyText(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (e) {}
+
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.left = '-9999px';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      let success = false;
+      try {
+        success = document.execCommand('copy');
+      } catch (e) {
+        success = false;
+      }
+      document.body.removeChild(textarea);
+      return success;
+    }
+
+    function buildResultUrl(type) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('result', type);
+      return url.toString();
+    }
+
+    function setButtonTemporaryText(button, text, originalText) {
+      button.textContent = text;
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 1500);
+    }
+
+    function renderResult(resultData = null) {
+      const data = resultData || getResultByScore(totalScore);
+      const resultUrl = buildResultUrl(data.type);
+      history.replaceState({}, '', resultUrl);
+
+      resultEmoji.textContent = data.emoji;
+      resultTitle.textContent = data.title;
+      resultSummary.textContent = data.summary;
+      resultDescription.textContent = data.description;
+      resultCharacter.src = data.image;
+      resultCharacter.style.display = 'block';
+      resultCharacter.onerror = () => {
+        resultCharacter.style.display = 'none';
+      };
+
+      resultChips.innerHTML = '';
+      data.chips.forEach(chip => {
+        const span = document.createElement('span');
+        span.className = 'chip';
+        span.textContent = chip;
+        resultChips.appendChild(span);
+      });
+
+      productsWrap.innerHTML = '';
+      data.products.forEach(product => {
+        const article = document.createElement('article');
+        article.className = 'product';
+        const link = document.createElement('a');
+        link.href = product.url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.textContent = '쿠팡에서 보기';
+        link.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+        article.innerHTML = `
+          <div class="product-name">${product.name}</div>
+          <div class="product-desc">${product.desc}</div>
+        `;
+        article.appendChild(link);
+        productsWrap.appendChild(article);
+      });
+
+      const shareText = `나 ${data.title.replace('당신은 ', '').replace('입니다', '')} 나옴ㅋㅋ ${data.emoji}
+이거 은근 잘 맞는다… 너도 해봐`;
+
+      copyBtn.onclick = async () => {
+        const ok = await copyText(shareText);
+        if (ok) {
+          setButtonTemporaryText(copyBtn, '복사 완료', '결과 문구 복사');
+        } else {
+          alert('복사에 실패했어요.');
+        }
+      };
+
+      copyLinkBtn.onclick = async () => {
+        const ok = await copyText(resultUrl);
+        if (ok) {
+          setButtonTemporaryText(copyLinkBtn, '복사 완료', '링크 복사');
+        } else {
+          alert('링크 복사에 실패했어요.');
+        }
+      };
+
+      const shareBtn = document.getElementById('shareBtn');
+      shareBtn.onclick = async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: 'SPTI 과자 성격 테스트',
+              text: shareText,
+              url: resultUrl
+            });
+          } catch (e) {}
+        } else {
+          const ok = await copyText(resultUrl);
+          if (ok) {
+            alert('공유 기능을 지원하지 않아 링크를 복사했어요.');
+          } else {
+            alert('공유에 실패했어요.');
+          }
+        }
+      };
+
+      showSection(result);
+    }
+
+    startBtn.addEventListener('click', startTest);
+    retryBtn.addEventListener('click', () => {
+      history.replaceState({}, '', window.location.pathname);
+      startTest();
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const resultType = params.get('result');
+      if (resultType) {
+        const resultData = getResultByType(resultType);
+        if (resultData) {
+          renderResult(resultData);
+          return;
+        }
+      }
+      showSection(landing);
+    });
+  </script>
+</body>
+</html>
