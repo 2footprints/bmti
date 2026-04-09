@@ -5,232 +5,886 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>요즘 당신의 과자 성격 유형은?</title>
 
-  <!-- OG (공유 최적화) -->
+  <!-- 공유 최적화 -->
   <meta property="og:title" content="요즘 당신의 과자 성격 유형은?" />
   <meta property="og:description" content="1분이면 결과 나오는 과자 성격 테스트 🍪" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://mbtim.netlify.app" />
   <meta property="og:image" content="https://mbtim.netlify.app/images/thumbnail.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="요즘 당신의 과자 성격 유형은?" />
+  <meta name="twitter:description" content="1분이면 결과 나오는 과자 성격 테스트 🍪" />
+  <meta name="twitter:image" content="https://mbtim.netlify.app/images/thumbnail.png" />
 
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans KR", sans-serif;
-      background: #fffaf5;
+    :root {
+      --bg: #fffaf5;
+      --bg2: #fff4ec;
+      --card: #ffffff;
+      --text: #2f241f;
+      --muted: #7d6b63;
+      --line: #f0dfd5;
+      --accent: #ff8f5a;
+      --accent-soft: #fff0e8;
+      --shadow: 0 16px 40px rgba(73, 42, 21, 0.08);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
       margin: 0;
-      padding: 20px;
-      text-align: center;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--bg2) 100%);
+      color: var(--text);
+    }
+
+    body {
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(760px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
     }
 
     .card {
-      max-width: 520px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      background: var(--card);
+      border: 1px solid rgba(240, 223, 213, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 28px;
     }
 
-    h1 { font-size: 28px; }
+    .section {
+      display: none;
+    }
 
-    button {
-      width: 100%;
-      padding: 14px;
-      margin: 8px 0;
-      border-radius: 12px;
+    .section.active {
+      display: block;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #b85d33;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1, h2, h3, p {
+      margin: 0;
+    }
+
+    .hero-title {
+      font-size: clamp(30px, 5vw, 46px);
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 14px;
+      word-break: keep-all;
+    }
+
+    .hero-sub {
+      font-size: 17px;
+      line-height: 1.75;
+      color: var(--muted);
+      margin-bottom: 28px;
+      word-break: keep-all;
+    }
+
+    .hero-points {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
+    }
+
+    .hero-point {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       border: none;
-      font-size: 15px;
+      border-radius: 16px;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 700;
       cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+      text-decoration: none;
     }
 
-    .primary {
-      background: #ff8f5a;
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent);
       color: white;
+      box-shadow: 0 14px 24px rgba(255, 143, 90, 0.3);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--text);
+      border: 1px solid var(--line);
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .progress-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .progress-label {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .progress {
+      height: 10px;
+      background: #f7e8de;
+      border-radius: 999px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff9b6b 0%, #ff7f50 100%);
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .question-title {
+      font-size: clamp(25px, 4vw, 34px);
+      line-height: 1.4;
+      letter-spacing: -0.03em;
+      margin: 18px 0 22px;
+      word-break: keep-all;
+    }
+
+    .answers {
+      display: grid;
+      gap: 12px;
     }
 
     .answer {
+      width: 100%;
+      text-align: left;
+      padding: 18px 18px;
+      border: 1px solid var(--line);
       background: #fff;
-      border: 1px solid #eee;
+      border-radius: 18px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      cursor: pointer;
+      transition: border-color .16s ease, background .16s ease, transform .16s ease;
+      word-break: keep-all;
     }
 
-    img {
-      width: 130px;
-      margin-bottom: 10px;
+    .answer:hover {
+      border-color: #ffb392;
+      background: #fff8f3;
+      transform: translateY(-1px);
     }
 
-    a {
+    .result-character {
+      width: 140px;
+      max-width: 100%;
       display: block;
-      margin: 6px 0;
-      padding: 10px;
-      background: #fff3ec;
-      border-radius: 10px;
+      margin: 0 auto 18px;
+      filter: drop-shadow(0 12px 24px rgba(0,0,0,0.08));
+    }
+
+    .result-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .result-title {
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+      word-break: keep-all;
+    }
+
+    .result-sub {
+      font-size: 17px;
+      color: #b85d33;
+      font-weight: 700;
+      word-break: keep-all;
+    }
+
+    .result-copy {
+      font-size: 17px;
+      line-height: 1.9;
+      color: #4f4038;
+      margin: 22px 0;
+      word-break: keep-all;
+    }
+
+    .mini-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      word-break: keep-all;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 26px;
+      justify-content: center;
+    }
+
+    .chip {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: #fff8f3;
+      color: #8d5a43;
+      border: 1px solid #f3d7c9;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .products {
+      display: grid;
+      gap: 14px;
+      margin: 18px 0 28px;
+    }
+
+    .product {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+      background: #fff;
+      text-align: left;
+    }
+
+    .product-name {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      line-height: 1.5;
+      word-break: keep-all;
+    }
+
+    .product-desc {
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 14px;
+      word-break: keep-all;
+    }
+
+    .product a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--accent-soft);
+      color: #b85d33;
+      font-weight: 800;
       text-decoration: none;
-      color: #333;
+      cursor: pointer;
+    }
+
+    .product a:hover {
+      background: #ffe3d6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footnote {
+      margin-top: 14px;
+      font-size: 13px;
+      color: #9c8578;
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        width: min(100% - 24px, 760px);
+        padding-top: 16px;
+      }
+
+      .card {
+        padding: 22px 18px;
+        border-radius: 22px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .actions .btn {
+        width: 100%;
+      }
+
+      .result-header {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
-
 <body>
+  <div class="app">
 
-<div class="card">
+    <!-- 랜딩 -->
+    <section id="landing" class="section active">
+      <div class="card">
+        <div class="badge">🍪 SPTI · Snack Personality Type Indicator</div>
+        <h1 class="hero-title">요즘 당신을 가장 닮은 과자는 무엇일까요?</h1>
+        <p class="hero-sub">
+          가볍게 고른 답변 속에 지금의 기분과 취향이 숨어 있습니다.<br>
+          6개의 질문에 답하면 당신과 가장 닮은 과자 유형과<br>
+          잘 맞는 간식 추천까지 보여드릴게요.
+        </p>
+        <div class="hero-points">
+          <span class="hero-point">약 1분 소요</span>
+          <span class="hero-point">총 6문항</span>
+          <span class="hero-point">결과 공유 가능</span>
+        </div>
+        <button class="btn btn-primary btn-block" id="startBtn">테스트 시작하기</button>
+      </div>
+    </section>
 
-  <!-- 랜딩 -->
-  <div id="landing">
-    <h1>🍪 과자 성격 테스트</h1>
-    <p>요즘 당신의 상태를 가장 잘 설명하는 간식은?</p>
-    <button class="primary" onclick="start()">테스트 시작</button>
+    <!-- 질문 -->
+    <section id="quiz" class="section">
+      <div class="card">
+        <div class="progress-wrap">
+          <div class="progress-label" id="progressLabel">1 / 6</div>
+          <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+        </div>
+        <h2 class="question-title" id="questionTitle"></h2>
+        <div class="answers" id="answersWrap"></div>
+      </div>
+    </section>
+
+    <!-- 결과 -->
+    <section id="result" class="section">
+      <div class="card">
+        <img class="result-character" id="resultCharacter" alt="과자 캐릭터" />
+
+        <div class="result-header">
+          <div>
+            <h2 class="result-title" id="resultTitle"></h2>
+            <p class="result-sub" id="resultSummary"></p>
+          </div>
+        </div>
+
+        <p class="result-copy" id="resultDescription"></p>
+
+        <div>
+          <div class="mini-title">이런 키워드와 잘 맞아요</div>
+          <div class="chips" id="resultChips"></div>
+        </div>
+
+        <div>
+          <div class="mini-title">이런 간식이 잘 어울려요</div>
+          <div class="products" id="productsWrap"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary" id="retryBtn">다시 테스트하기</button>
+          <button class="btn btn-secondary" id="copyBtn">결과 문구 복사</button>
+          <button class="btn btn-secondary" id="copyLinkBtn">링크 복사</button>
+          <button class="btn btn-secondary" id="shareBtn">공유하기</button>
+        </div>
+
+        <p class="footnote">
+          링크 공유 후 미리보기가 바로 바뀌지 않으면 메신저 캐시 영향일 수 있습니다.
+        </p>
+      </div>
+    </section>
   </div>
 
-  <!-- 질문 -->
-  <div id="quiz" style="display:none;">
-    <h2 id="question"></h2>
-    <div id="answers"></div>
-  </div>
+  <script>
+    const SITE_URL = "https://mbtim.netlify.app";
 
-  <!-- 결과 -->
-  <div id="result" style="display:none;">
-    <img id="img"/>
-    <h2 id="title"></h2>
-    <p id="desc"></p>
+    const questions = [
+      {
+        q: "주말이 왔을 때, 더 마음이 가는 쪽은?",
+        a: [
+          ["혼자 쉬면서 조용히 재충전하는 시간", 0],
+          ["사람들을 만나고 바깥 공기를 쐬는 시간", 1]
+        ]
+      },
+      {
+        q: "요즘 당신에게 더 필요한 건 무엇에 가깝나요?",
+        a: [
+          ["마음을 편하게 만드는 안정감", 0],
+          ["일상을 바꿔주는 새로운 자극", 1]
+        ]
+      },
+      {
+        q: "간식이 가장 생각나는 순간은 언제인가요?",
+        a: [
+          ["혼자 쉬면서 잠깐 숨 돌리고 싶을 때", 0],
+          ["누군가와 함께 즐기고 싶은 순간", 1]
+        ]
+      },
+      {
+        q: "무언가를 고를 때, 더 끌리는 쪽은?",
+        a: [
+          ["익숙해서 편안한 선택", 0],
+          ["새롭고 재밌어 보이는 선택", 1]
+        ]
+      },
+      {
+        q: "스트레스를 받았을 때 당신은 보통 어떻게 하나요?",
+        a: [
+          ["조용히 혼자만의 방식으로 푼다", 0],
+          ["밖으로 나가거나 사람들과 어울리며 푼다", 1]
+        ]
+      },
+      {
+        q: "기분 전환을 위한 소비를 할 때 더 가까운 쪽은?",
+        a: [
+          ["작지만 확실하게 만족스러운 것", 0],
+          ["한 번 사더라도 기분이 확 살아나는 것", 1]
+        ]
+      }
+    ];
 
-    <div id="products"></div>
+    const resultMap = [
+      {
+        min: 0,
+        max: 1,
+        type: "pepero",
+        image: "images/pepero.png",
+        title: "당신은 빼빼로형 인간입니다",
+        summary: "혼자 있는 시간에서 충전되는, 조용한 만족형",
+        description: "겉으로는 가볍고 편안해 보여도, 사실은 혼자 있는 시간에서 에너지를 회복하는 타입입니다. 요즘의 당신은 거창한 이벤트보다 작지만 확실하게 기분을 올려주는 순간이 더 필요할 수 있어요.",
+        chips: ["혼자 충전", "작은 행복", "부담 없는 만족"],
+        products: [
+          {
+            name: "빼빼로 크런키 10개입",
+            desc: "혼자 하나씩 꺼내먹기 좋은 간식. 익숙한데도 은근히 만족감이 높은 선택이에요.",
+            url: "https://link.coupang.com/a/elEFfW"
+          },
+          {
+            name: "빼빼로 아몬드 10개입",
+            desc: "조금 더 고소한 맛이 필요할 때 잘 맞는 클래식한 조합입니다.",
+            url: "https://link.coupang.com/a/elEFBH"
+          },
+          {
+            name: "우마이봉 파티타임 초코맛",
+            desc: "가볍게 기분 전환하고 싶을 때 부담 없이 집기 좋은 재미있는 간식이에요.",
+            url: "https://link.coupang.com/a/elEFSa"
+          }
+        ]
+      },
+      {
+        min: 2,
+        max: 2,
+        type: "cookie",
+        image: "images/cookie.png",
+        title: "당신은 쿠키형 인간입니다",
+        summary: "익숙한 것에서 행복을 찾는, 따뜻한 일상형",
+        description: "익숙한 것에서 안정감을 느끼고, 조용한 루틴 안에서 만족을 찾는 타입입니다. 새로운 자극보다는 편안하고 믿을 수 있는 선택이 지금의 당신과 더 잘 맞아요.",
+        chips: ["안정감", "따뜻한 루틴", "편안한 만족"],
+        products: [
+          {
+            name: "데니쉬 버터쿠키 800g",
+            desc: "익숙해서 더 편안한 티타임 간식. 조용한 오후와 잘 어울리는 클래식한 선택입니다.",
+            url: "https://link.coupang.com/a/elEGd7"
+          },
+          {
+            name: "화이트캐슬 버터쿠키",
+            desc: "무난하면서도 만족도 높은 버터쿠키. 집에 두고 천천히 꺼내 먹기 좋아요.",
+            url: "https://link.coupang.com/a/elEGyN"
+          },
+          {
+            name: "널담 르뱅쿠키 세트",
+            desc: "조금 더 특별한 날을 위한 선택. 평소보다 기분 좋은 간식 시간이 만들어집니다.",
+            url: "https://link.coupang.com/a/elEGLP"
+          }
+        ]
+      },
+      {
+        min: 3,
+        max: 3,
+        type: "jelly",
+        image: "images/jelly.png",
+        title: "당신은 젤리형 인간입니다",
+        summary: "새롭고 재미있는 자극을 찾는, 즉흥 만족형",
+        description: "요즘의 당신은 단조로운 일상보다 가볍게 기분을 바꿔주는 자극을 더 원하고 있습니다. 작더라도 재미있고 새로운 선택이 생각보다 큰 만족으로 이어질 수 있어요.",
+        chips: ["자극 추구", "즉흥성", "신상 좋아함"],
+        products: [
+          {
+            name: "하리보 스타믹스 젤리",
+            desc: "여러 맛을 한 번에 즐길 수 있어 질리지 않는 인기 간식입니다.",
+            url: "https://link.coupang.com/a/elEH3L"
+          },
+          {
+            name: "마이구미 미니 과즙팡 비타민",
+            desc: "가볍게 집어먹기 좋고 달콤하게 기분 전환하기 좋은 선택이에요.",
+            url: "https://link.coupang.com/a/elEIkQ"
+          },
+          {
+            name: "츄파춥스 사워 바이츠 젤리",
+            desc: "톡 쏘는 자극이 필요한 날 잘 맞는, 조금 더 재미있는 젤리예요.",
+            url: "https://link.coupang.com/a/elEIEl"
+          }
+        ]
+      },
+      {
+        min: 4,
+        max: 4,
+        type: "icecream",
+        image: "images/icecream.png",
+        title: "당신은 아이스크림형 인간입니다",
+        summary: "위로와 휴식이 필요한, 부드러운 힐링형",
+        description: "지금의 당신은 억지로 텐션을 끌어올리기보다, 천천히 감정을 풀어주는 시간이 필요한 상태일 수 있습니다. 부드럽고 편안한 만족이 잘 어울리는 시기예요.",
+        chips: ["힐링 필요", "감정형", "부드러운 만족"],
+        products: [
+          {
+            name: "라라스윗 초콜릿 아이스밀크",
+            desc: "부드럽게 쉬고 싶은 날 잘 어울리는 달콤한 힐링 디저트입니다.",
+            url: "https://link.coupang.com/a/elEIXi"
+          },
+          {
+            name: "벤앤제리스 피스타치오 아이스크림",
+            desc: "조금 더 특별한 기분 전환이 필요할 때 만족감을 주는 선택이에요.",
+            url: "https://link.coupang.com/a/elEJhe"
+          },
+          {
+            name: "빙그레 엑설런트 오리지널",
+            desc: "익숙해서 더 위로가 되는 클래식한 아이스크림. 실패 없는 선택입니다.",
+            url: "https://link.coupang.com/a/elEJwI"
+          }
+        ]
+      },
+      {
+        min: 5,
+        max: 5,
+        type: "popcorn",
+        image: "images/popcorn.png",
+        title: "당신은 팝콘형 인간입니다",
+        summary: "함께 나누는 순간이 즐거운, 공유 에너지형",
+        description: "혼자보다는 함께 있을 때 더 즐겁고 에너지가 살아나는 타입입니다. 좋은 것도 나눌 때 더 만족스럽고, 분위기를 만들어주는 간식과 특히 잘 맞아요.",
+        chips: ["공유형", "외향적", "함께 즐김"],
+        products: [
+          {
+            name: "바프 버터솔트 팝콘",
+            desc: "가볍게 같이 즐기기 좋은 맛. 영화나 수다 시간에 잘 어울립니다.",
+            url: "https://link.coupang.com/a/elEJK7"
+          },
+          {
+            name: "곰곰 스윗점보팝콘",
+            desc: "달달한 분위기를 더해주는 팝콘. 여럿이 함께 먹기 좋습니다.",
+            url: "https://link.coupang.com/a/elEJ2L"
+          },
+          {
+            name: "다르다팝콘 시네마 믹스",
+            desc: "영화 볼 때 분위기를 확 살려주는 간식. 공유형 타입에게 특히 잘 맞아요.",
+            url: "https://link.coupang.com/a/elEKeN"
+          }
+        ]
+      },
+      {
+        min: 6,
+        max: 6,
+        type: "chocolate",
+        image: "images/chocolate.png",
+        title: "당신은 초콜릿형 인간입니다",
+        summary: "나를 위한 소비를 즐길 줄 아는, 감각 만족형",
+        description: "당신은 단순히 배를 채우는 소비보다, 기분과 분위기까지 만족시키는 선택을 더 중요하게 생각합니다. 오늘은 조금 더 괜찮은 걸 고를 자격이 충분해요.",
+        chips: ["자기보상", "가치소비", "감각 중시"],
+        products: [
+          {
+            name: "나트라 코코아 트러플스 초콜릿",
+            desc: "나를 위한 작은 보상이 필요할 때 만족도가 높은 프리미엄 디저트입니다.",
+            url: "https://link.coupang.com/a/elEKwb"
+          },
+          {
+            name: "벨기에 부샤드 밀크초콜릿",
+            desc: "기분을 부드럽게 올려주는 달콤한 선택. 조금 더 제대로 즐기고 싶은 날 추천해요.",
+            url: "https://link.coupang.com/a/elEKBz"
+          },
+          {
+            name: "위니비니 베어 초콜릿",
+            desc: "귀엽고 달콤한 감성까지 챙길 수 있는 초콜릿. 선물처럼 즐기기 좋아요.",
+            url: "https://link.coupang.com/a/elEKH6"
+          }
+        ]
+      }
+    ];
 
-    <button onclick="copyText()">결과 복사</button>
-    <button onclick="copyLink()">링크 복사</button>
-    <button onclick="share()">공유하기</button>
-    <button onclick="start()">다시하기</button>
-  </div>
+    const landing = document.getElementById("landing");
+    const quiz = document.getElementById("quiz");
+    const result = document.getElementById("result");
 
-</div>
+    const questionTitle = document.getElementById("questionTitle");
+    const answersWrap = document.getElementById("answersWrap");
+    const progressLabel = document.getElementById("progressLabel");
+    const progressBar = document.getElementById("progressBar");
 
-<script>
+    const resultCharacter = document.getElementById("resultCharacter");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultSummary = document.getElementById("resultSummary");
+    const resultDescription = document.getElementById("resultDescription");
+    const resultChips = document.getElementById("resultChips");
+    const productsWrap = document.getElementById("productsWrap");
 
-const questions = [
-  {q:"주말에 더 끌리는 건?", a:[["집에서 혼자 쉬기",0],["밖에서 약속",1]]},
-  {q:"요즘 나는?", a:[["안정 필요",0],["자극 필요",1]]},
-  {q:"간식 먹는 순간?", a:[["혼자",0],["같이",1]]},
-  {q:"취향은?", a:[["익숙한 것",0],["새로운 것",1]]},
-  {q:"스트레스 해소?", a:[["혼자",0],["사람 만나기",1]]},
-  {q:"소비 스타일?", a:[["소확행",0],["한방",1]]},
-];
+    const startBtn = document.getElementById("startBtn");
+    const retryBtn = document.getElementById("retryBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const copyLinkBtn = document.getElementById("copyLinkBtn");
+    const shareBtn = document.getElementById("shareBtn");
 
-let step=0, score=0;
+    let currentIndex = 0;
+    let totalScore = 0;
 
-function start(){
-  step=0; score=0;
-  landing.style.display="none";
-  result.style.display="none";
-  quiz.style.display="block";
-  next();
-}
-
-function next(){
-  if(step>=questions.length) return showResult();
-
-  question.innerText = questions[step].q;
-  answers.innerHTML="";
-
-  questions[step].a.forEach(v=>{
-    let b=document.createElement("button");
-    b.className="answer";
-    b.innerText=v[0];
-    b.onclick=()=>{score+=v[1];step++;next();}
-    answers.appendChild(b);
-  });
-}
-
-function showResult(){
-
-  quiz.style.display="none";
-  result.style.display="block";
-
-  let data;
-
-  if(score<=1){
-    data={
-      title:"🍫 빼빼로형 인간",
-      img:"images/pepero.png",
-      desc:"혼자 있는 시간에서 충전되는 타입",
-      products:[
-        ["빼빼로 크런키","https://link.coupang.com/a/elEFfW"],
-        ["빼빼로 아몬드","https://link.coupang.com/a/elEFBH"]
-      ]
+    function showSection(target) {
+      [landing, quiz, result].forEach(el => el.classList.remove("active"));
+      target.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  } else if(score==2){
-    data={
-      title:"🍪 쿠키형 인간",
-      img:"images/cookie.png",
-      desc:"편안한 루틴을 좋아하는 타입",
-      products:[
-        ["버터쿠키","https://link.coupang.com/a/elEGd7"]
-      ]
+
+    function startTest() {
+      currentIndex = 0;
+      totalScore = 0;
+      renderQuestion();
+      showSection(quiz);
     }
-  } else if(score==3){
-    data={
-      title:"🍭 젤리형 인간",
-      img:"images/jelly.png",
-      desc:"새로운 자극을 찾는 타입",
-      products:[
-        ["하리보 젤리","https://link.coupang.com/a/elEH3L"]
-      ]
+
+    function renderQuestion() {
+      const current = questions[currentIndex];
+      questionTitle.textContent = current.q;
+      progressLabel.textContent = `${currentIndex + 1} / ${questions.length}`;
+      progressBar.style.width = `${((currentIndex + 1) / questions.length) * 100}%`;
+
+      answersWrap.innerHTML = "";
+
+      current.a.forEach(answer => {
+        const btn = document.createElement("button");
+        btn.className = "answer";
+        btn.textContent = answer[0];
+        btn.addEventListener("click", () => chooseAnswer(answer[1]));
+        answersWrap.appendChild(btn);
+      });
     }
-  } else if(score==4){
-    data={
-      title:"🍦 아이스크림형 인간",
-      img:"images/icecream.png",
-      desc:"힐링이 필요한 상태",
-      products:[
-        ["아이스크림","https://link.coupang.com/a/elEIXi"]
-      ]
+
+    function chooseAnswer(score) {
+      totalScore += score;
+      currentIndex += 1;
+
+      if (currentIndex < questions.length) {
+        renderQuestion();
+      } else {
+        renderResult();
+      }
     }
-  } else if(score==5){
-    data={
-      title:"🍿 팝콘형 인간",
-      img:"images/popcorn.png",
-      desc:"사람들과 함께 즐기는 타입",
-      products:[
-        ["팝콘","https://link.coupang.com/a/elEJK7"]
-      ]
+
+    function getResultByScore(score) {
+      return resultMap.find(item => score >= item.min && score <= item.max) || resultMap[0];
     }
-  } else {
-    data={
-      title:"🍫 초콜릿형 인간",
-      img:"images/chocolate.png",
-      desc:"나를 위한 소비를 하는 타입",
-      products:[
-        ["초콜릿","https://link.coupang.com/a/elEKwb"]
-      ]
+
+    function getResultByType(type) {
+      return resultMap.find(item => item.type === type) || null;
     }
-  }
 
-  img.src=data.img;
-  title.innerText=data.title;
-  desc.innerText=data.desc;
+    async function copyTextSafe(text) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (e) {}
 
-  products.innerHTML="";
-  data.products.forEach(p=>{
-    let a=document.createElement("a");
-    a.href=p[1];
-    a.target="_blank";
-    a.innerText=p[0];
-    products.appendChild(a);
-  });
-}
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
 
-function copyText(){
-  navigator.clipboard.writeText("나 이거 해봤는데 은근 잘 맞음ㅋㅋ 너도 해봐");
-}
+      let success = false;
+      try {
+        success = document.execCommand("copy");
+      } catch (e) {
+        success = false;
+      }
 
-function copyLink(){
-  navigator.clipboard.writeText(location.href);
-}
+      document.body.removeChild(textarea);
+      return success;
+    }
 
-function share(){
-  if(navigator.share){
-    navigator.share({title:"과자 테스트",url:location.href});
-  }
-}
+    function buildResultUrl(type) {
+      const url = new URL(SITE_URL);
+      url.searchParams.set("result", type);
+      return url.toString();
+    }
 
-</script>
+    function setButtonTemporaryText(button, text, originalText) {
+      button.textContent = text;
+      setTimeout(() => {
+        button.textContent = originalText;
+      }, 1500);
+    }
 
+    function renderResult(resultData = null) {
+      const data = resultData || getResultByScore(totalScore);
+      const resultUrl = buildResultUrl(data.type);
+
+      history.replaceState({}, "", `?result=${data.type}`);
+
+      resultCharacter.src = data.image;
+      resultCharacter.style.display = "block";
+      resultCharacter.onerror = () => {
+        resultCharacter.style.display = "none";
+      };
+
+      resultTitle.textContent = data.title;
+      resultSummary.textContent = data.summary;
+      resultDescription.textContent = data.description;
+
+      resultChips.innerHTML = "";
+      data.chips.forEach(chip => {
+        const span = document.createElement("span");
+        span.className = "chip";
+        span.textContent = chip;
+        resultChips.appendChild(span);
+      });
+
+      productsWrap.innerHTML = "";
+      data.products.forEach(product => {
+        const article = document.createElement("article");
+        article.className = "product";
+
+        const name = document.createElement("div");
+        name.className = "product-name";
+        name.textContent = product.name;
+
+        const desc = document.createElement("div");
+        desc.className = "product-desc";
+        desc.textContent = product.desc;
+
+        const link = document.createElement("a");
+        link.href = product.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = "쿠팡에서 보기";
+
+        article.appendChild(name);
+        article.appendChild(desc);
+        article.appendChild(link);
+        productsWrap.appendChild(article);
+      });
+
+      const shareText = `나 ${data.title.replace("당신은 ", "").replace("입니다", "")} 나옴ㅋㅋ ${data.summary}\n이거 은근 잘 맞는다… 너도 해봐 🍪`;
+
+      copyBtn.onclick = async () => {
+        const ok = await copyTextSafe(`${shareText}\n${resultUrl}`);
+        if (ok) {
+          setButtonTemporaryText(copyBtn, "복사 완료", "결과 문구 복사");
+        } else {
+          alert("복사에 실패했어요.");
+        }
+      };
+
+      copyLinkBtn.onclick = async () => {
+        const ok = await copyTextSafe(resultUrl);
+        if (ok) {
+          setButtonTemporaryText(copyLinkBtn, "복사 완료", "링크 복사");
+        } else {
+          alert("링크 복사에 실패했어요.");
+        }
+      };
+
+      shareBtn.onclick = async () => {
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              title: "요즘 당신의 과자 성격 유형은?",
+              text: "1분이면 결과 나오는 과자 성격 테스트 🍪",
+              url: resultUrl
+            });
+          } catch (e) {}
+        } else {
+          const ok = await copyTextSafe(resultUrl);
+          if (ok) {
+            alert("공유 기능을 지원하지 않아 링크를 복사했어요.");
+          } else {
+            alert("공유에 실패했어요.");
+          }
+        }
+      };
+
+      showSection(result);
+    }
+
+    startBtn.addEventListener("click", startTest);
+
+    retryBtn.addEventListener("click", () => {
+      history.replaceState({}, "", window.location.pathname);
+      startTest();
+    });
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const resultType = params.get("result");
+
+      if (resultType) {
+        const resultData = getResultByType(resultType);
+        if (resultData) {
+          renderResult(resultData);
+          return;
+        }
+      }
+
+      showSection(landing);
+    });
+  </script>
 </body>
 </html>
